@@ -13,7 +13,7 @@ export function info(request) {
     longitude: cf.longitude || null,
     timezone: cf.timezone || null,
     asn: cf.asn || null,
-    isp: cf.asOrganization || null,
+    isp: cf.asOrganization && cf.asOrganization !== 'N/A' ? cf.asOrganization : null,
     colo: cf.colo || null,
     httpProtocol: cf.httpProtocol || null,
     tlsVersion: cf.tlsVersion || null,
