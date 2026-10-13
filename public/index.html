@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>我的 IP 是多少?查詢 IP 位址、ISP、所在地 | ip.3mi.ai</title>
+<meta name="description" content="一打開就顯示你目前的對外 IP 位址、IPv4 / IPv6、ISP 業者、ASN、所在國家城市與瀏覽器資訊。也支援 curl ip.3mi.ai 直接取得 IP。">
+<link rel="canonical" href="https://ip.3mi.ai/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0d9488">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:site_name" content="3mi.ai">
+<meta property="og:url" content="https://ip.3mi.ai/">
+<meta property="og:title" content="我的 IP 是多少? | ip.3mi.ai">
+<meta property="og:description" content="查詢目前的 IP 位址、ISP、所在地與瀏覽器資訊。curl ip.3mi.ai 也能用。">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"我的 IP","url":"https://ip.3mi.ai/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","inLanguage":"zh-TW","description":"查詢目前的對外 IP 位址、ISP、ASN、所在地與瀏覽器資訊。","offers":{"@type":"Offer","price":"0","priceCurrency":"TWD"},"author":{"@type":"Person","name":"山米","url":"https://3mi.ai/"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://font.emtech.cc/css/jfOpenHuninn/400" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7faf9; --card:#fff; --ink:#1c2826; --muted:#6b7a77; --soft:#eef5f3; --border:#e2e8e6;
+  --primary:#0d9488; --primary-fg:#fff; --primary-ink:#0f766e;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans TC',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;width:100%;max-width:880px;margin:0 auto;padding:0 16px 48px}
+h1,h2{font-family:jfOpenHuninn,'Noto Sans TC',system-ui,sans-serif;font-weight:400}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+svg.i{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.top{border-bottom:1px solid var(--border);background:var(--card)}
+.top .bar{max-width:880px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center}
+.logo svg.i{width:22px;height:22px}
+.top h1{margin:0;font-size:20px}
+.top p{margin:0;font-size:12px;color:var(--muted)}
+
+.hero{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:28px 20px;margin:28px 0 16px;text-align:center;box-shadow:0 10px 15px -3px rgb(0 0 0/.05)}
+.hero .label{color:var(--muted);font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.ip{font-size:clamp(26px,7vw,52px);font-weight:700;margin:8px 0 12px;word-break:break-all;color:var(--primary-ink);min-height:1.3em}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--soft);color:var(--primary-ink);vertical-align:middle}
+.where{color:var(--muted);margin:0 0 16px}
+button{font:inherit;font-weight:500;font-size:15px;border:1px solid var(--primary);border-radius:8px;padding:9px 18px;cursor:pointer;background:var(--primary);color:var(--primary-fg);display:inline-flex;align-items:center;gap:6px}
+button:hover{filter:brightness(1.07)}
+button:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 45%,transparent);outline-offset:2px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px}
+.card{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:16px}
+.card h2{margin:0 0 8px;font-size:18px;display:flex;align-items:center;gap:8px}
+.card h2 svg.i{color:var(--primary)}
+dl{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:8px 16px;font-size:14px}
+dt{color:var(--muted)}
+dd{margin:0;word-break:break-word}
+
+.cli{margin-top:16px}
+pre{margin:0;background:#1c2826;color:#d7f5ef;border-radius:8px;padding:12px 14px;overflow-x:auto;font-size:13px;line-height:1.7}
+pre .c{color:#7d9590}
+
+.foot{border-top:1px solid var(--border);margin-top:48px;font-size:12px;color:var(--muted)}
+.foot .wrap{max-width:880px;margin:0 auto;padding:32px 16px}
+.foot a{color:var(--muted);text-decoration:none;transition:color .15s}
+.foot a:hover,.foot a.strong{color:var(--ink)}
+.foot a.strong:hover{color:var(--primary-ink)}
+.foot .row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+.foot .social{display:flex;gap:12px}
+.foot .social svg{width:16px;height:16px;display:block}
+.foot .more{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:24px;padding-top:16px;border-top:1px solid var(--border);font-size:11px}
+.foot .copy{margin-left:auto}
+</style>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J5JJ99T7XL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-J5JJ99T7XL');
+</script>
+</head>
+<body>
+<header class="top"><div class="bar">
+  <div class="logo"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></div>
+  <div><h1>我的 IP</h1><p>ip.3mi.ai</p></div>
+</div></header>
+<main>
+  <section class="hero">
+    <div class="label"><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>你目前的 IP 位址 <span class="tag" id="ver"></span></div>
+    <div class="ip mono" id="ip">查詢中…</div>
+    <p class="where" id="where"></p>
+    <button id="copy" type="button"><svg class="i" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>複製 IP</span></button>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2><svg class="i" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg>連線資訊</h2>
+      <dl id="net"></dl>
+    </section>
+    <section class="card">
+      <h2><svg class="i" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></svg>瀏覽器資訊</h2>
+      <dl id="browser"></dl>
+    </section>
+  </div>
+
+  <section class="card cli">
+    <h2><svg class="i" viewBox="0 0 24 24"><path d="m4 17 6-6-6-6M12 19h8"/></svg>在終端機查 IP</h2>
+<pre class="mono"><span class="c"># 只回 IP</span>
+curl ip.3mi.ai
+<span class="c"># 完整資訊(JSON)</span>
+curl ip.3mi.ai/json</pre>
+  </section>
+</main>
+<!-- 頁尾沿用 3mi 各站共用那組(putguard SiteFooter.jsx),不要另外發明 -->
+<footer class="foot"><div class="wrap">
+  <div class="row">
+    <span>由 Sammy Lin 製作 · <a class="strong" href="https://3mi.ai" target="_blank" rel="noopener">3mi.ai</a></span>
+    <span class="social">
+      <a href="https://github.com/sammylin" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297a12 12 0 0 0-3.79 23.39c.6.111.82-.26.82-.578v-2.234c-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.084 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.3-5.467-1.332-5.467-5.930 0-1.31.468-2.38 1.235-3.22-.123-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.005 2.047.138 3.006.404 2.290-1.552 3.297-1.23 3.297-1.23.653 1.653.241 2.873.118 3.176.77.84 1.233 1.91 1.233 3.22 0 4.61-2.806 5.625-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .32.218.694.825.576A12 12 0 0 0 12 .297z"/></svg></a>
+      <a href="https://linkedin.com/in/sammylintw" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+      <a href="https://x.com/sammylintw" target="_blank" rel="noopener" aria-label="X" title="X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </span>
+  </div>
+  <div class="more">
+    <span>其他作品</span>
+    <a href="https://3mi.ai" target="_blank" rel="noopener">3mi.ai</a>
+    <a href="https://reads.3mi.ai" target="_blank" rel="noopener">Reads</a>
+    <a href="https://trending.3mi.ai" target="_blank" rel="noopener">Trending</a>
+    <a href="https://chunkup.3mi.ai" target="_blank" rel="noopener">ChunkUp</a>
+    <span class="copy">© <span id="year"></span> Sammy Lin</span>
+  </div>
+</div></footer>
+<!-- ponytail: 改 js 要手動把 ?v= 加一;math.3mi.ai 的 zone 設定會把 _headers 的 max-age=0 蓋成 4 小時 -->
+<script>
+const $ = id => document.getElementById(id)
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
+const rows = (el, pairs) => { el.innerHTML = pairs.filter(([, v]) => v != null && v !== '').map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('') }
+const country = code => { try { return new Intl.DisplayNames(['zh-Hant'], { type: 'region' }).of(code) } catch { return code } }
+$('year').textContent = new Date().getFullYear()
+
+fetch('/json', { cache: 'no-store' }).then(r => r.json()).then(d => {
+  $('ip').textContent = d.ip
+  $('ver').textContent = 'IPv' + d.version
+  const place = [d.city, d.region, d.country && country(d.country)].filter(Boolean)
+  $('where').textContent = [place.join(', '), d.isp].filter(Boolean).join(' · ')
+  rows($('net'), [
+    ['IP 位址', d.ip],
+    ['ISP', d.isp],
+    ['ASN', d.asn && 'AS' + d.asn],
+    ['國家', d.country && `${country(d.country)} (${d.country})`],
+    ['地區', d.region],
+    ['城市', d.city],
+    ['郵遞區號', d.postalCode],
+    ['經緯度', d.latitude && `${d.latitude}, ${d.longitude}`],
+    ['時區', d.timezone],
+    ['CF 節點', d.colo],
+    ['協定', [d.httpProtocol, d.tlsVersion].filter(Boolean).join(' / ')],
+  ])
+}).catch(() => { $('ip').textContent = '查詢失敗,請重新整理' })
+
+rows($('browser'), [
+  ['User-Agent', navigator.userAgent],
+  ['語言', navigator.languages?.join(', ') || navigator.language],
+  ['時區', Intl.DateTimeFormat().resolvedOptions().timeZone],
+  ['螢幕', `${screen.width} × ${screen.height} @${devicePixelRatio}x`],
+  ['視窗', `${innerWidth} × ${innerHeight}`],
+  ['平台', navigator.userAgentData?.platform || navigator.platform],
+  ['CPU 核心', navigator.hardwareConcurrency],
+  ['Cookie', navigator.cookieEnabled ? '已啟用' : '已停用'],
+  ['Do Not Track', navigator.doNotTrack === '1' ? '開' : '關'],
+])
+
+$('copy').onclick = async () => {
+  const label = $('copy').querySelector('span')
+  try { await navigator.clipboard.writeText($('ip').textContent); label.textContent = '已複製' }
+  catch { label.textContent = '複製失敗' }
+  setTimeout(() => label.textContent = '複製 IP', 1500)
+}
+</script>
+</body>
+</html>
